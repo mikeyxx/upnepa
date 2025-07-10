@@ -37,23 +37,23 @@ export interface CustomAxiosInstance
   <T = any>(config: AxiosRequestConfig): Promise<T>;
 
   // Include existing method definitions
-  get<T = any, R = T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  post<T = any, D = any, R = T>(
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  post<T = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig,
   ): Promise<T>;
-  put<T = any, D = any, R = T>(
+  put<T = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig,
   ): Promise<T>;
-  patch<T = any, D = any, R = T>(
+  patch<T = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig,
   ): Promise<T>;
-  delete<T = any, R = T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
 }
 
 // Create the axios instance with the custom type

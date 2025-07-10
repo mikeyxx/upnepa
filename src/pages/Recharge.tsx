@@ -267,10 +267,10 @@ const Recharge = () => {
                 py-4 px-6 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 border-2
                 ${
                   selectedAmount === amount
-                    ? "bg-blue-600 border-blue-600 text-white shadow-lg"
+                    ? "bg-blue-600 border-blue-600 shadow-lg"
                     : isThemeDark
-                      ? "bg-gray-700/50 border-gray-600 text-gray-300 hover:border-gray-500 hover:bg-gray-700"
-                      : "bg-gray-50 border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-100"
+                      ? "text-gray-200 hover:border-gray-500 hover:bg-gray-700"
+                      : "text-gray-700 hover:border-gray-300 hover:bg-gray-100"
                 }
                 transform hover:scale-[1.02] active:scale-[0.98]
               `}
@@ -419,10 +419,10 @@ const Recharge = () => {
             w-full py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
             ${
               isValidAmount()
-                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
                 : isThemeDark
-                  ? "bg-gray-700 text-gray-500"
-                  : "bg-gray-200 text-gray-400"
+                  ? "text-gray-200"
+                  : "text-gray-900"
             }
           `}
             >

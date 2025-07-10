@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../features/app/hooks.ts";
 import { useEffect } from "react";
-import { setTheme, toggleTheme } from "../features/slices/app-settings.ts";
+import { setTheme } from "../features/slices/app-settings.ts";
 import { Zap, HelpCircle, Home } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router";
 import { removeToken } from "../api/api-methods.ts";
@@ -81,16 +81,16 @@ const Header = () => {
                 <span className="text-sm hidden sm:inline">Support</span>
               </button>
             ))}
-          <button
-            onClick={() => dispatch(toggleTheme())}
-            className={`px-4 py-2 rounded-lg cursor-pointer ${
-              isThemeDark
-                ? "bg-gray-700 hover:bg-gray-600"
-                : "bg-gray-700 hover:bg-gray-200"
-            } transition-colors`}
-          >
-            {isThemeDark ? "🌙" : "☀️"}
-          </button>
+          {/*<button*/}
+          {/*  onClick={() => dispatch(toggleTheme())}*/}
+          {/*  className={`px-4 py-2 rounded-lg cursor-pointer ${*/}
+          {/*    isThemeDark*/}
+          {/*      ? "bg-gray-700 hover:bg-gray-600"*/}
+          {/*      : "bg-gray-700 hover:bg-gray-200"*/}
+          {/*  } transition-colors`}*/}
+          {/*>*/}
+          {/*  {isThemeDark ? "🌙" : "☀️"}*/}
+          {/*</button>*/}
           {location.pathname === "/landing-page" && isFirstTime && (
             <Link
               to="/signup"

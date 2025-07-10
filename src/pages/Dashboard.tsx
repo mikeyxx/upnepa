@@ -20,9 +20,7 @@ const Dashboard = () => {
   const { user } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const { data: recentTransactions, isLoading } = useFetchTransactionHistory(
-    {},
-  );
+  const { data: recentTransactions } = useFetchTransactionHistory({});
 
   const handleRecharge = () => {
     navigate("/recharge");
