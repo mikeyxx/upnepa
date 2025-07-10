@@ -63,36 +63,32 @@ const Recharge = () => {
     const totalAmount = getSelectedAmount();
     if (totalAmount <= 0) return null;
 
-    const totalElectricityCost = getElectricityBreakdown(totalAmount);
+    const electricityData = getElectricityBreakdown(totalAmount);
 
-    // Apply flat or percentage service fee based on amount
+    // Apply flat or percentage service fee
     const serviceFee =
       totalAmount < 10000
         ? FLAT_SERVICE_FEE
-        : totalElectricityCost.totalCost * SERVICE_FEE_PERCENTAGE;
-
-    const unitsToReceive = totalElectricityCost.units;
+        : electricityData.totalCost * SERVICE_FEE_PERCENTAGE;
 
     return {
       electricityCost: Math.max(0, totalAmount),
-      remitaFee: totalElectricityCost.remitaFee,
+      remitaFee: electricityData.remitaFee,
+      vat: electricityData.vat,
       serviceFee: Number(serviceFee.toFixed(2)),
-      unitsToReceive: Math.max(0, unitsToReceive),
-      totalPayable: Number(
-        (totalElectricityCost.totalCost + serviceFee).toFixed(2),
-      ),
+      unitsToReceive: Math.max(0, electricityData.units),
+      totalPayable: Number((electricityData.totalCost + serviceFee).toFixed(2)),
     };
   };
 
   const breakdown = calculateBreakdown();
 
   const handleProceedToPayment = () => {
-    const amount = selectedAmount || parseFloat(customAmount);
-    if (amount) {
+    if (breakdown) {
       dispatch(
         setTotalPayable({
-          totalPayable: Number(breakdown?.totalPayable),
-          unit: Number(breakdown?.unitsToReceive),
+          totalPayable: Number(breakdown.totalPayable),
+          unit: Number(breakdown.unitsToReceive),
         }),
       );
       navigate("/payment");
@@ -332,6 +328,17 @@ const Recharge = () => {
                           className={`font-semibold ${isThemeDark ? "text-white" : "text-gray-900"}`}
                         >
                           ₦{breakdown.electricityCost.toLocaleString()}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`${isThemeDark ? "text-gray-300" : "text-gray-700"}`}
+                        >
+                          VAT (6.98%)
+                        </span>
+                        <span className="font-semibold text-red-500">
+                          -₦{breakdown.vat.toLocaleString()}
                         </span>
                       </div>
 

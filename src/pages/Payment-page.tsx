@@ -23,9 +23,9 @@ const PaymentPage = () => {
   const paymentDetails = {
     totalAmount: totalPayable,
     kwhUnits: unit,
-    accountNumber: "0123456789",
-    accountName: "PowerFlow Electricity Services",
-    bankName: "First Bank of Nigeria",
+    accountNumber: "5329499488",
+    accountName: "Greylabs",
+    bankName: "MoniePoint",
   };
 
   const handleCopy = (text: string, field: any) => {
