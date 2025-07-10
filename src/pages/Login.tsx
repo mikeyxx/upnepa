@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Mail,
-  Lock,
-  Zap,
-  ArrowRight,
-  Shield,
-  Clock,
-  Smartphone,
-} from "lucide-react";
+import { Mail, Lock, Zap, ArrowRight, Shield, Smartphone } from "lucide-react";
 import { useAppSelector } from "../features/app/hooks.ts";
 import InputField from "../components/ui/Input.tsx";
 import Header from "../components/Header.tsx";
@@ -162,10 +154,10 @@ const Login = () => {
               {/* Benefits List */}
               <div className="space-y-4 mb-8">
                 {[
-                  { icon: Clock, text: "Quick access to your meter balance" },
+                  // { icon: Clock, text: "Quick access to your meter balance" },
                   { icon: Smartphone, text: "Mobile-friendly dashboard" },
                   { icon: Shield, text: "Secure and encrypted transactions" },
-                  { icon: Zap, text: "Instant power top-ups anytime" },
+                  // { icon: Zap, text: "Instant power top-ups anytime" },
                 ].map(({ icon: Icon, text }, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">

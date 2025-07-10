@@ -17,8 +17,6 @@ const PaymentPage = () => {
   const [copiedField, setCopiedField] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log({ user });
-
   // Payment details
   const paymentDetails = {
     totalAmount: totalPayable,

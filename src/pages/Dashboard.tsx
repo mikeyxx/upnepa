@@ -196,49 +196,51 @@ const Dashboard = () => {
               </h2>
 
               <div className="space-y-4 mb-6">
-                {recentTransactions?.map((transaction: TransactionHistory) => (
-                  <div
-                    key={transaction.id}
-                    className={`flex items-center justify-between p-4 rounded-xl border ${
-                      isThemeDark
-                        ? "bg-gray-700/30 border-gray-600/50"
-                        : "bg-gray-50/50 border-gray-200/50"
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                          isThemeDark
-                            ? "bg-blue-500/20 text-blue-400"
-                            : "bg-blue-100 text-blue-600"
-                        }`}
-                      >
-                        <Zap className="w-6 h-6" />
+                {recentTransactions
+                  ?.slice(0, 3)
+                  ?.map((transaction: TransactionHistory) => (
+                    <div
+                      key={transaction.id}
+                      className={`flex items-center justify-between p-4 rounded-xl border ${
+                        isThemeDark
+                          ? "bg-gray-700/30 border-gray-600/50"
+                          : "bg-gray-50/50 border-gray-200/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            isThemeDark
+                              ? "bg-blue-500/20 text-blue-400"
+                              : "bg-blue-100 text-blue-600"
+                          }`}
+                        >
+                          <Zap className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p
+                            className={`font-semibold ${isThemeDark ? "text-white" : "text-gray-900"}`}
+                          >
+                            ₦{Number(transaction.amount).toLocaleString()}
+                          </p>
+                          <span
+                            className={`text-sm ${isThemeDark ? "text-gray-400" : "text-gray-500"}`}
+                          >
+                            {moment(transaction.created_at).format(
+                              "MMM DD, YYYY",
+                            )}
+                          </span>
+                        </div>
                       </div>
-                      <div>
+                      <div className="text-right">
                         <p
-                          className={`font-semibold ${isThemeDark ? "text-white" : "text-gray-900"}`}
+                          className={`font-bold text-lg ${isThemeDark ? "text-white" : "text-gray-900"}`}
                         >
-                          ₦{Number(transaction.amount).toLocaleString()}
+                          {transaction.unit} kWh
                         </p>
-                        <span
-                          className={`text-sm ${isThemeDark ? "text-gray-400" : "text-gray-500"}`}
-                        >
-                          {moment(transaction.created_at).format(
-                            "MMM DD, YYYY",
-                          )}
-                        </span>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p
-                        className={`font-bold text-lg ${isThemeDark ? "text-white" : "text-gray-900"}`}
-                      >
-                        {transaction.unit} kWh
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               <button

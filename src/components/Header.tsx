@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../features/app/hooks.ts";
 import { useEffect } from "react";
 import { setTheme, toggleTheme } from "../features/slices/app-settings.ts";
-import { Zap } from "lucide-react";
+import { Zap, HelpCircle, Home } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router";
 import { removeToken } from "../api/api-methods.ts";
 import { logout } from "../features/slices/auth.ts";
@@ -11,6 +11,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const { isThemeDark } = useAppSelector((state) => state.appSettings);
   const { isFirstTime } = useAppSelector((state) => state.appSettings);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
   // Check system preference and set initial theme
   useEffect(() => {
@@ -30,6 +31,14 @@ const Header = () => {
     navigate("/login");
   };
 
+  const handleContactSupport = () => {
+    navigate("/contact-support");
+  };
+
+  const handleGoHome = () => {
+    navigate("/dashboard");
+  };
+
   const routesInclude = ["/landing-page", "/login", "/signup"];
 
   return (
@@ -44,6 +53,34 @@ const Header = () => {
           <div className="text-2xl font-bold text-blue-600">UpNepa</div>
         </div>
         <div className="flex items-center space-x-3">
+          {isAuthenticated &&
+            (location.pathname === "/contact-support" ? (
+              <button
+                onClick={handleGoHome}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                  isThemeDark
+                    ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
+                title="Go Home"
+              >
+                <Home className="w-4 h-4" />
+                <span className="text-sm hidden sm:inline">Home</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleContactSupport}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                  isThemeDark
+                    ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
+                title="Contact Support"
+              >
+                <HelpCircle className="w-4 h-4" />
+                <span className="text-sm hidden sm:inline">Support</span>
+              </button>
+            ))}
           <button
             onClick={() => dispatch(toggleTheme())}
             className={`px-4 py-2 rounded-lg cursor-pointer ${

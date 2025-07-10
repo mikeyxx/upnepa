@@ -7,4 +7,5 @@ export const apiEndpoints = {
   resetPassword: "/auth/reset-password",
   save_transaction: "/transaction/save-transaction",
   get_transaction_history: "/transaction/get-transaction-history",
+  contact_support: "/support/send-ticket",
 };
