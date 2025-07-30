@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { setTheme } from "../features/slices/app-settings.ts";
 import { Zap, HelpCircle, Home } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router";
-import { removeToken } from "../api/api-methods.ts";
 import { logout } from "../features/slices/auth.ts";
 
 const Spinner = () => (
@@ -32,16 +31,8 @@ const Header = () => {
 
   const handleLogout = async () => {
     setLoggingOut(true);
-    try {
-      await dispatch(logout()).unwrap();
-      console.log("Server logout successful.");
-    } catch (error) {
-      console.error("Logout failed on the server:", error);
-    } finally {
-      removeToken();
-      setLoggingOut(false);
-      navigate("/login");
-    }
+
+    await dispatch(logout());
   };
 
   const handleContactSupport = () => {

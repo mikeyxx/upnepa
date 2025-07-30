@@ -8,11 +8,11 @@ import moment from "moment";
 export interface TransactionHistory {
   id: string;
   user_id: string;
-  amount: string; // If you prefer number, convert it when handling
-  unit: string; // Same here — can be number if parsed
+  amount: string;
+  unit: string;
   reference: string;
   meter_number: string;
-  created_at: string; // ISO timestamp — consider using Date if parsed
+  created_at: string;
 }
 
 const Dashboard = () => {
@@ -20,7 +20,9 @@ const Dashboard = () => {
   const { user } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const { data: recentTransactions } = useFetchTransactionHistory({});
+  const { data: recentTransactions, isLoading } = useFetchTransactionHistory(
+    {},
+  );
 
   const handleRecharge = () => {
     navigate("/recharge");
@@ -179,80 +181,124 @@ const Dashboard = () => {
           </div>
 
           {/* Recent Transactions Section */}
-          {recentTransactions?.length > 0 && (
+          {isLoading ? (
+            // Skeleton Loader for Recent Transactions
             <div
               className={`${
                 isThemeDark ? "bg-gray-800/50" : "bg-white/70"
               } backdrop-blur-xl rounded-3xl p-8 shadow-2xl border ${
                 isThemeDark ? "border-gray-700/50" : "border-white/50"
-              }`}
+              } animate-pulse`}
             >
-              <h2
-                className={`text-2xl font-bold mb-6 ${isThemeDark ? "text-gray-100" : "text-gray-700"}`}
-              >
-                Recent Transactions
-              </h2>
-
+              <div className={`h-7 bg-gray-600/50 rounded w-1/3 mb-6`}></div>
               <div className="space-y-4 mb-6">
-                {recentTransactions
-                  ?.slice(0, 3)
-                  ?.map((transaction: TransactionHistory) => (
-                    <div
-                      key={transaction.id}
-                      className={`flex items-center justify-between p-4 rounded-xl border ${
-                        isThemeDark
-                          ? "bg-gray-700/30 border-gray-600/50"
-                          : "bg-gray-50/50 border-gray-200/50"
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className={`flex items-center justify-between p-4 rounded-xl border ${
+                      isThemeDark
+                        ? "bg-gray-700/30 border-gray-600/50"
+                        : "bg-gray-50/50 border-gray-200/50"
+                    }`}
+                  >
+                    <div className="flex items-center gap-4 flex-1">
+                      <div
+                        className={`w-12 h-12 rounded-full ${isThemeDark ? "bg-gray-600" : "bg-gray-200"}`}
+                      ></div>
+                      <div className="w-full space-y-2">
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                            isThemeDark
-                              ? "bg-blue-500/20 text-blue-400"
-                              : "bg-blue-100 text-blue-600"
-                          }`}
-                        >
-                          <Zap className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <p
-                            className={`font-semibold ${isThemeDark ? "text-white" : "text-gray-900"}`}
-                          >
-                            ₦{Number(transaction.amount).toLocaleString()}
-                          </p>
-                          <span
-                            className={`text-sm ${isThemeDark ? "text-gray-400" : "text-gray-500"}`}
-                          >
-                            {moment(transaction.created_at).format(
-                              "MMM DD, YYYY",
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p
-                          className={`font-bold text-lg ${isThemeDark ? "text-white" : "text-gray-900"}`}
-                        >
-                          {transaction.unit} kWh
-                        </p>
+                          className={`h-4 rounded w-1/2 ${isThemeDark ? "bg-gray-600" : "bg-gray-200"}`}
+                        ></div>
+                        <div
+                          className={`h-3 rounded w-1/3 ${isThemeDark ? "bg-gray-600" : "bg-gray-200"}`}
+                        ></div>
                       </div>
                     </div>
-                  ))}
+                    <div
+                      className={`h-6 rounded w-16 ${isThemeDark ? "bg-gray-600" : "bg-gray-200"}`}
+                    ></div>
+                  </div>
+                ))}
               </div>
-
-              <button
-                onClick={handleViewAllTransactions}
-                className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 flex items-center justify-center gap-2 border-2 border-dashed cursor-pointer ${
-                  isThemeDark
-                    ? "border-gray-600 text-gray-300 hover:border-gray-500 hover:text-white hover:bg-gray-700/20"
-                    : "border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-900 hover:bg-gray-50"
+              <div
+                className={`h-12 w-full rounded-xl border-2 border-dashed ${isThemeDark ? "border-gray-600" : "border-gray-300"}`}
+              ></div>
+            </div>
+          ) : (
+            recentTransactions?.length > 0 && (
+              // Actual Recent Transactions
+              <div
+                className={`${
+                  isThemeDark ? "bg-gray-800/50" : "bg-white/70"
+                } backdrop-blur-xl rounded-3xl p-8 shadow-2xl border ${
+                  isThemeDark ? "border-gray-700/50" : "border-white/50"
                 }`}
               >
-                <Eye className="w-5 h-5" />
-                View all transactions
-              </button>
-            </div>
+                <h2
+                  className={`text-2xl font-bold mb-6 ${isThemeDark ? "text-gray-100" : "text-gray-700"}`}
+                >
+                  Recent Transactions
+                </h2>
+                <div className="space-y-4 mb-6">
+                  {recentTransactions
+                    ?.slice(0, 3)
+                    ?.map((transaction: TransactionHistory) => (
+                      <div
+                        key={transaction.id}
+                        className={`flex items-center justify-between p-4 rounded-xl border ${
+                          isThemeDark
+                            ? "bg-gray-700/30 border-gray-600/50"
+                            : "bg-gray-50/50 border-gray-200/50"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div
+                            className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                              isThemeDark
+                                ? "bg-blue-500/20 text-blue-400"
+                                : "bg-blue-100 text-blue-600"
+                            }`}
+                          >
+                            <Zap className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <p
+                              className={`font-semibold ${isThemeDark ? "text-white" : "text-gray-900"}`}
+                            >
+                              ₦{Number(transaction.amount).toLocaleString()}
+                            </p>
+                            <span
+                              className={`text-sm ${isThemeDark ? "text-gray-400" : "text-gray-500"}`}
+                            >
+                              {moment(transaction.created_at).format(
+                                "MMM DD, YYYY",
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p
+                            className={`font-bold text-lg ${isThemeDark ? "text-white" : "text-gray-900"}`}
+                          >
+                            {transaction.unit} kWh
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                <button
+                  onClick={handleViewAllTransactions}
+                  className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 flex items-center justify-center gap-2 border-2 border-dashed cursor-pointer ${
+                    isThemeDark
+                      ? "border-gray-600 text-gray-300 hover:border-gray-500 hover:text-white hover:bg-gray-700/20"
+                      : "border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  <Eye className="w-5 h-5" />
+                  View all transactions
+                </button>
+              </div>
+            )
           )}
         </div>
       </div>

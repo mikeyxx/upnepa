@@ -3,7 +3,7 @@ import {
   type PayloadAction,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { postData, setTokens } from "../../api/api-methods.ts";
+import { postData, setTokens, removeToken } from "../../api/api-methods.ts";
 import { apiEndpoints } from "../../api/api-endpoints.ts";
 
 interface User {
@@ -51,7 +51,16 @@ export const authenticateUser = createAsyncThunk(
 );
 
 export const logout = createAsyncThunk("auth/logout", async () => {
-  await postData(apiEndpoints.logout, {}); // should clear the cookie
+  try {
+    await postData(apiEndpoints.logout, {});
+  } catch (error) {
+    console.error(
+      "Server logout call failed, proceeding with client-side logout anyway.",
+      error,
+    );
+  } finally {
+    removeToken();
+  }
 });
 
 const authSlice = createSlice({

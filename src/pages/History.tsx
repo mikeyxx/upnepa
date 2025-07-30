@@ -24,7 +24,7 @@ const History = () => {
 
   const { startDate, endDate } = getDateRangeFromFilter(dateFilter);
 
-  const { data: recentTransactions } = useFetchTransactionHistory({
+  const { data: recentTransactions, isLoading } = useFetchTransactionHistory({
     startDate,
     endDate,
     reference: searchTerm,
@@ -92,15 +92,15 @@ const History = () => {
                 />
               </button>
               <div>
-                <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+                <h1 className="text-3xl lg:text-4xl font-bold">
                   <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                     Transaction History
                   </span>
                 </h1>
                 <p
-                  className={`text-lg ${isThemeDark ? "text-gray-300" : "text-gray-600"}`}
+                  className={`text-base lg:text-lg ${isThemeDark ? "text-gray-300" : "text-gray-600"}`}
                 >
-                  View and manage all your electricity top-up transactions
+                  View and manage all your transactions.
                 </p>
               </div>
             </div>
@@ -110,7 +110,7 @@ const History = () => {
           <div
             className={`${
               isThemeDark ? "bg-gray-800/50" : "bg-white/70"
-            } backdrop-blur-xl rounded-3xl p-6 shadow-2xl border ${
+            } backdrop-blur-xl rounded-3xl p-4 md:p-6 shadow-2xl border ${
               isThemeDark ? "border-gray-700/50" : "border-white/50"
             } mb-8`}
           >
@@ -122,7 +122,7 @@ const History = () => {
                 />
                 <input
                   type="text"
-                  placeholder="Search by reference, amount, or type..."
+                  placeholder="Search by reference, amount..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={`w-full pl-12 pr-4 py-3 rounded-xl border ${
@@ -136,7 +136,7 @@ const History = () => {
               {/* Filter Toggle */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 ${
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
                   isThemeDark
                     ? "bg-gray-700/50 hover:bg-gray-600/50 text-white border border-gray-600/50"
                     : "bg-gray-100/50 hover:bg-gray-200/50 text-gray-900 border border-gray-300/50"
@@ -185,21 +185,72 @@ const History = () => {
           <div
             className={`${
               isThemeDark ? "bg-gray-800/50" : "bg-white/70"
-            } backdrop-blur-xl rounded-3xl p-8 shadow-2xl border ${
+            } backdrop-blur-xl rounded-3xl p-4 md:p-8 shadow-2xl border ${
               isThemeDark ? "border-gray-700/50" : "border-white/50"
             }`}
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2 sm:gap-0">
               <h2 className="text-2xl font-bold">All Transactions</h2>
-              <span
-                className={`text-sm ${isThemeDark ? "text-gray-400" : "text-gray-600"}`}
-              >
-                {filteredTransactions?.length} transaction
-                {filteredTransactions?.length !== 1 ? "s" : ""} found
-              </span>
+              {!isLoading && (
+                <span
+                  className={`text-sm ${isThemeDark ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  {filteredTransactions?.length} transaction
+                  {filteredTransactions?.length !== 1 ? "s" : ""} found
+                </span>
+              )}
             </div>
 
-            {filteredTransactions?.length === 0 ? (
+            {isLoading ? (
+              // Skeleton Loader
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className={`p-4 md:p-6 rounded-xl border ${
+                      isThemeDark
+                        ? "bg-gray-700/30 border-gray-600/50"
+                        : "bg-gray-50/50 border-gray-200/50"
+                    } animate-pulse`}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div className="flex items-center gap-4 flex-1">
+                        <div
+                          className={`w-12 h-12 rounded-full ${
+                            isThemeDark ? "bg-gray-600" : "bg-gray-200"
+                          }`}
+                        ></div>
+                        <div className="w-full space-y-2">
+                          <div
+                            className={`h-4 rounded w-3/4 ${
+                              isThemeDark ? "bg-gray-600" : "bg-gray-200"
+                            }`}
+                          ></div>
+                          <div
+                            className={`h-3 rounded w-1/2 ${
+                              isThemeDark ? "bg-gray-600" : "bg-gray-200"
+                            }`}
+                          ></div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start md:items-end gap-2">
+                        <div
+                          className={`h-6 rounded w-20 ${
+                            isThemeDark ? "bg-gray-600" : "bg-gray-200"
+                          }`}
+                        ></div>
+                        <div
+                          className={`h-3 rounded w-28 ${
+                            isThemeDark ? "bg-gray-600" : "bg-gray-200"
+                          }`}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : filteredTransactions?.length === 0 ? (
+              // No Transactions Found
               <div className="text-center py-12">
                 <div
                   className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
@@ -220,21 +271,22 @@ const History = () => {
                 </p>
               </div>
             ) : (
+              // Display Transactions
               <div className="space-y-4">
                 {filteredTransactions?.map(
                   (transaction: TransactionHistory) => (
                     <div
                       key={transaction.id}
-                      className={`p-6 rounded-xl border transition-all duration-200 hover:shadow-lg ${
+                      className={`p-4 md:p-6 rounded-xl border transition-all duration-200 hover:shadow-lg ${
                         isThemeDark
                           ? "bg-gray-700/30 border-gray-600/50 hover:bg-gray-700/50"
                           : "bg-gray-50/50 border-gray-200/50 hover:bg-white/70"
                       }`}
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div className="flex items-center gap-4">
                           <div
-                            className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            className={`w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center ${
                               isThemeDark ? "bg-blue-500/20" : "bg-blue-100"
                             }`}
                           >
@@ -253,7 +305,7 @@ const History = () => {
                             >
                               Ref: {transaction.reference}
                             </p>
-                            <div className="flex items-center gap-4 mt-1">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-x-4 gap-y-1 mt-1">
                               <div className="flex items-center gap-1">
                                 <Calendar
                                   className={`w-4 h-4 ${isThemeDark ? "text-gray-400" : "text-gray-500"}`}
@@ -282,7 +334,7 @@ const History = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="text-right">
+                        <div className="text-center">
                           <p
                             className={`font-bold text-xl ${isThemeDark ? "text-white" : "text-gray-900"}`}
                           >
