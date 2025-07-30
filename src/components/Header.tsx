@@ -1,12 +1,17 @@
 import { useAppDispatch, useAppSelector } from "../features/app/hooks.ts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setTheme } from "../features/slices/app-settings.ts";
 import { Zap, HelpCircle, Home } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router";
 import { removeToken } from "../api/api-methods.ts";
 import { logout } from "../features/slices/auth.ts";
 
+const Spinner = () => (
+  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+);
+
 const Header = () => {
+  const [loggingOut, setLoggingOut] = useState(false);
   const location = useLocation();
   const dispatch = useAppDispatch();
   const { isThemeDark } = useAppSelector((state) => state.appSettings);
@@ -26,9 +31,17 @@ const Header = () => {
   }, []);
 
   const handleLogout = async () => {
-    dispatch(logout());
-    removeToken();
-    navigate("/login");
+    setLoggingOut(true);
+    try {
+      await dispatch(logout()).unwrap();
+      console.log("Server logout successful.");
+    } catch (error) {
+      console.error("Logout failed on the server:", error);
+    } finally {
+      removeToken();
+      setLoggingOut(false);
+      navigate("/login");
+    }
   };
 
   const handleContactSupport = () => {
@@ -103,8 +116,9 @@ const Header = () => {
             <button
               className={`${isThemeDark ? "signup-btn-dark" : "signup-btn"} cursor-pointer`}
               onClick={handleLogout}
+              disabled={loggingOut}
             >
-              Log out
+              {loggingOut ? <Spinner /> : "Log out"}
             </button>
           )}
         </div>
