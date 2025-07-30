@@ -24,7 +24,7 @@ const History = () => {
 
   const { startDate, endDate } = getDateRangeFromFilter(dateFilter);
 
-  const { data: recentTransactions, isLoading } = useFetchTransactionHistory({
+  const { data: recentTransactions } = useFetchTransactionHistory({
     startDate,
     endDate,
     reference: searchTerm,

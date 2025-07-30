@@ -1,18 +1,17 @@
 import { Clock, Receipt, CreditCard, Zap } from "lucide-react";
 import nepaApp from "../assets/images/nepaapp.jpeg";
 import { useAppSelector } from "../features/app/hooks.ts";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import Header from "./Header.tsx";
 
 const UpNepaLanding = () => {
-  const navigate = useNavigate();
   const { isThemeDark } = useAppSelector((state) => state.appSettings);
 
   return (
     <>
       <Header />
       <div
-        className={`min-h-screen transition-colors duration-300 ${
+        className={`min-h-screen transition-colors duration-300 pt-20 ${
           isThemeDark ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
         }`}
       >
@@ -32,12 +31,12 @@ const UpNepaLanding = () => {
             from anywhere, anytime.
           </p>
 
-          <button
-            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg"
-            onClick={() => navigate("/signup")}
+          <Link
+            to="/signup"
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
           >
             Try UpNepa App
-          </button>
+          </Link>
 
           {/* Mobile App Screenshots Placeholder */}
           <div className="mt-16 flex justify-center items-center">
@@ -234,12 +233,12 @@ const UpNepaLanding = () => {
               Join thousands of users who have ditched the queues for convenient
               electricity top-ups
             </p>
-            <button
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg"
-              onClick={() => navigate("/signup")}
+            <Link
+              to="/signup"
+              className="inline-block bg-white hover:bg-gray-100 text-blue-600 font-semibold px-8 py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
             >
               Try UpNepa App
-            </button>
+            </Link>
           </div>
         </section>
 

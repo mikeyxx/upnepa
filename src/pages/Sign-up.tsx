@@ -221,8 +221,8 @@ const SignUp = () => {
               {/* Features List */}
               <div className="space-y-4 mb-8">
                 {[
-                  "Instant meter top-ups from anywhere",
-                  "Smart reminders before your power runs out",
+                  // "Instant meter top-ups from anywhere",
+                  // "Smart reminders before your power runs out",
                   "Digital receipts sent to your phone",
                   "Track your monthly electricity spending",
                 ].map((feature, index) => (
@@ -292,7 +292,7 @@ const SignUp = () => {
 
                     <InputField
                       icon={Phone}
-                      label="Phone Number"
+                      label="Phone Number (WhatsApp number (preferably) - We will send your token to this number)"
                       placeholder="080 0000 0000"
                       field="phone"
                       value={formData.phone}

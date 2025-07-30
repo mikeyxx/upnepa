@@ -7,6 +7,7 @@ import axios, {
 } from "axios";
 import { apiEndpoints } from "./api-endpoints";
 import CONFIG from "../utils/config.ts";
+import toast from "react-hot-toast";
 
 const AUTH_TOKEN_KEY = "authToken";
 
@@ -37,23 +38,23 @@ export interface CustomAxiosInstance
   <T = any>(config: AxiosRequestConfig): Promise<T>;
 
   // Include existing method definitions
-  get<T = any, R = T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  post<T = any, D = any, R = T>(
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  post<T = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig,
   ): Promise<T>;
-  put<T = any, D = any, R = T>(
+  put<T = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig,
   ): Promise<T>;
-  patch<T = any, D = any, R = T>(
+  patch<T = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig,
   ): Promise<T>;
-  delete<T = any, R = T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
 }
 
 // Create the axios instance with the custom type
@@ -125,7 +126,8 @@ axiosInstance.interceptors.response.use(
     // Define endpoints that should not trigger a token refresh
     const noRefreshEndpoints = [
       apiEndpoints.login,
-      apiEndpoints.signup, // It's good practice to add sign-up as well
+      apiEndpoints.logout,
+      apiEndpoints.signup,
       apiEndpoints.verifyEmail,
       apiEndpoints.resetPassword,
     ];
@@ -185,7 +187,8 @@ axiosInstance.interceptors.response.use(
         );
         processQueue(refreshError, null);
         removeToken();
-        window.alert("Your session has expired. Please log in again.");
+        // window.alert("Your session has expired. Please log in again.");
+        toast.error("Your session has expired. Please log in again.");
         navigateToLogin();
         return Promise.reject(refreshError);
       } finally {

@@ -16,6 +16,7 @@ import { getUserStatus } from "./features/services/cache.ts";
 import PaymentPage from "./pages/Payment-page.tsx";
 import PaymentConfirmationPage from "./pages/Payment-confirmation-page.tsx";
 import ForgotPassword from "./pages/Forgot-Password.tsx";
+import ContactSupport from "./pages/Contact-support.tsx";
 
 const LoadingSpinner = () => (
   <div className="flex h-screen w-screen items-center justify-center">
@@ -38,7 +39,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   // Store current path as redirect parameter when redirecting to auth pages
   const currentPath = location.pathname;
-  const authPages = ["/login", "/signup", "/forgot-password", "/landing-page"];
+  // const authPages = ["/login", "/signup", "/forgot-password", "/landing-page"];
 
   if (isFirstTimeLogin) {
     return (
@@ -176,6 +177,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <History />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/contact-support",
+    element: (
+      <ProtectedRoute>
+        <ContactSupport />
       </ProtectedRoute>
     ),
   },

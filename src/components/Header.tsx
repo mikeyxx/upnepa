@@ -1,16 +1,22 @@
 import { useAppDispatch, useAppSelector } from "../features/app/hooks.ts";
-import { useEffect } from "react";
-import { setTheme, toggleTheme } from "../features/slices/app-settings.ts";
-import { Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { setTheme } from "../features/slices/app-settings.ts";
+import { Zap, HelpCircle, Home } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router";
 import { removeToken } from "../api/api-methods.ts";
 import { logout } from "../features/slices/auth.ts";
 
+const Spinner = () => (
+  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+);
+
 const Header = () => {
+  const [loggingOut, setLoggingOut] = useState(false);
   const location = useLocation();
   const dispatch = useAppDispatch();
   const { isThemeDark } = useAppSelector((state) => state.appSettings);
   const { isFirstTime } = useAppSelector((state) => state.appSettings);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
   // Check system preference and set initial theme
   useEffect(() => {
@@ -25,9 +31,25 @@ const Header = () => {
   }, []);
 
   const handleLogout = async () => {
-    dispatch(logout());
-    removeToken();
-    navigate("/login");
+    setLoggingOut(true);
+    try {
+      await dispatch(logout()).unwrap();
+      console.log("Server logout successful.");
+    } catch (error) {
+      console.error("Logout failed on the server:", error);
+    } finally {
+      removeToken();
+      setLoggingOut(false);
+      navigate("/login");
+    }
+  };
+
+  const handleContactSupport = () => {
+    navigate("/contact-support");
+  };
+
+  const handleGoHome = () => {
+    navigate("/dashboard");
   };
 
   const routesInclude = ["/landing-page", "/login", "/signup"];
@@ -44,16 +66,44 @@ const Header = () => {
           <div className="text-2xl font-bold text-blue-600">UpNepa</div>
         </div>
         <div className="flex items-center space-x-3">
-          <button
-            onClick={() => dispatch(toggleTheme())}
-            className={`px-4 py-2 rounded-lg cursor-pointer ${
-              isThemeDark
-                ? "bg-gray-700 hover:bg-gray-600"
-                : "bg-gray-700 hover:bg-gray-200"
-            } transition-colors`}
-          >
-            {isThemeDark ? "🌙" : "☀️"}
-          </button>
+          {isAuthenticated &&
+            (location.pathname === "/contact-support" ? (
+              <button
+                onClick={handleGoHome}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                  isThemeDark
+                    ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
+                title="Go Home"
+              >
+                <Home className="w-4 h-4" />
+                <span className="text-sm hidden sm:inline">Home</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleContactSupport}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                  isThemeDark
+                    ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
+                title="Contact Support"
+              >
+                <HelpCircle className="w-4 h-4" />
+                <span className="text-sm hidden sm:inline">Support</span>
+              </button>
+            ))}
+          {/*<button*/}
+          {/*  onClick={() => dispatch(toggleTheme())}*/}
+          {/*  className={`px-4 py-2 rounded-lg cursor-pointer ${*/}
+          {/*    isThemeDark*/}
+          {/*      ? "bg-gray-700 hover:bg-gray-600"*/}
+          {/*      : "bg-gray-700 hover:bg-gray-200"*/}
+          {/*  } transition-colors`}*/}
+          {/*>*/}
+          {/*  {isThemeDark ? "🌙" : "☀️"}*/}
+          {/*</button>*/}
           {location.pathname === "/landing-page" && isFirstTime && (
             <Link
               to="/signup"
@@ -66,8 +116,9 @@ const Header = () => {
             <button
               className={`${isThemeDark ? "signup-btn-dark" : "signup-btn"} cursor-pointer`}
               onClick={handleLogout}
+              disabled={loggingOut}
             >
-              Log out
+              {loggingOut ? <Spinner /> : "Log out"}
             </button>
           )}
         </div>

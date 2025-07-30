@@ -6,6 +6,7 @@ import { useAppDispatch } from "./features/app/hooks.ts";
 import { useEffect } from "react";
 import { authenticateUser } from "./features/slices/auth.ts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { getAuthToken } from "./api/api-methods.ts";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -14,7 +15,9 @@ const AppInitializer = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(authenticateUser());
+    if (getAuthToken()) {
+      dispatch(authenticateUser());
+    }
   }, [dispatch]);
 
   return null; // it doesn't render anything, it's just for init side-effects

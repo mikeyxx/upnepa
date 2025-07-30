@@ -5,6 +5,7 @@
  */
 export function getElectricityBreakdown(amount: number) {
   const UNIT_PRICE = 209.5;
+  const VAT_RATE = 0.0698; // 6.98%
 
   // Step 1: Compute remita fee
   function calculateRemitaCharge(amount: number) {
@@ -41,12 +42,21 @@ export function getElectricityBreakdown(amount: number) {
   }
 
   const remitaFee = calculateRemitaCharge(amount);
+
+  // Step 2: Calculate VAT on the electricity amount
+  const vat = amount * VAT_RATE;
+
+  // Step 3: Calculate the actual amount for electricity after deducting VAT
+  const amountForUnits = amount - vat;
+
+  // Step 4: Calculate total cost and units
   const totalCost = amount + remitaFee;
-  const units = amount / UNIT_PRICE;
+  const units = amountForUnits / UNIT_PRICE;
 
   return {
     remitaFee: Number(remitaFee.toFixed(2)),
     totalCost: Number(totalCost.toFixed(2)),
     units: Number(units.toFixed(2)),
+    vat: Number(vat.toFixed(2)),
   };
 }

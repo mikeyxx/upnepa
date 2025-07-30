@@ -83,9 +83,11 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(logout.fulfilled, (state) => {
+        state.isAuthenticated = false;
         state.token = null;
         state.user = null;
-        state.isAuthenticated = false;
+        state.status = "idle";
+        state.error = null;
       });
   },
 });

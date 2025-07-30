@@ -5,7 +5,6 @@ import Header from "../components/Header.tsx";
 import { useNavigate } from "react-router";
 import { postData } from "../api/api-methods.ts";
 import { apiEndpoints } from "../api/api-endpoints.ts";
-import Button from "../components/ui/Button.tsx";
 
 const PaymentPage = () => {
   const { isThemeDark } = useAppSelector((state) => state.appSettings);
@@ -17,15 +16,13 @@ const PaymentPage = () => {
   const [copiedField, setCopiedField] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log({ user });
-
   // Payment details
   const paymentDetails = {
     totalAmount: totalPayable,
     kwhUnits: unit,
-    accountNumber: "0123456789",
-    accountName: "PowerFlow Electricity Services",
-    bankName: "First Bank of Nigeria",
+    accountNumber: "5329499488",
+    accountName: "Greylabs",
+    bankName: "MoniePoint",
   };
 
   const handleCopy = (text: string, field: any) => {
@@ -258,15 +255,13 @@ const PaymentPage = () => {
           </div>
 
           {/* Confirmation Button */}
-          <Button
+          <button
             onClick={handleTransferComplete}
             disabled={isLoading}
-            className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none mb-4 cursor-pointer
-             `}
-            loading={isLoading}
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 rounded-xl font-semibold text-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            I've Transferred the Money
-          </Button>
+            {isLoading ? "Processing..." : "I've Transferred the Money"}
+          </button>
 
           {/* Footer Text */}
           <p
