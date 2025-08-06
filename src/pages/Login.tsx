@@ -209,7 +209,7 @@ const Login = () => {
                   icon={Mail}
                   label="Email Address"
                   type="email"
-                  placeholder="john@example.com"
+                  // placeholder="john@example.com"
                   field="email"
                   value={formData.email}
                   error={errors.email}
@@ -220,7 +220,7 @@ const Login = () => {
                 <InputField
                   icon={Lock}
                   label="Password"
-                  placeholder="••••••••"
+                  // placeholder="••••••••"
                   field="password"
                   showToggle={true}
                   value={formData.password}

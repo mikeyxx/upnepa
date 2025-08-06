@@ -9,12 +9,14 @@ import {
   ArrowRight,
   Check,
 } from "lucide-react";
-import { useAppSelector } from "../features/app/hooks.ts";
+import { useAppDispatch, useAppSelector } from "../features/app/hooks.ts";
 import InputField from "../components/ui/Input.tsx";
 import Header from "../components/Header.tsx";
 import { Link, useNavigate } from "react-router";
-import { postData } from "../api/api-methods.ts";
+import { postData, setTokens } from "../api/api-methods.ts";
 import { apiEndpoints } from "../api/api-endpoints.ts";
+import { cacheUserStatus } from "../features/services/cache.ts";
+import { login } from "../features/slices/auth.ts";
 
 type FormFields =
   | "fullName"
@@ -43,6 +45,7 @@ interface FormErrors {
   meterNumber?: string;
   password?: string;
   confirmPassword?: string;
+  api?: string;
 }
 
 const SignUp = () => {
@@ -62,11 +65,12 @@ const SignUp = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleInputChange = (field: FormFields, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    if (Object.keys(errors).length > 0) {
+      setErrors({});
     }
   };
 
@@ -118,9 +122,23 @@ const SignUp = () => {
       setIsSubmitting(true);
       try {
         const response = await postData(apiEndpoints.signup, formData);
-        console.log({ response });
-        navigate("/login");
-      } catch (error) {
+        if (response.success) {
+          setTokens(response.accessToken);
+          cacheUserStatus(response.user.isFirstTimeLogin);
+          dispatch(
+            login({
+              token: response.accessToken,
+              user: response.user,
+            }),
+          );
+          navigate("/dashboard");
+        }
+      } catch (error: any) {
+        console.error("Sign Up Failed:", error);
+        const errorMessage =
+          error?.message || "An unexpected error occurred. Please try again.";
+        // Set the error message in the state to be displayed in the UI
+        setErrors({ api: errorMessage });
       } finally {
         setIsSubmitting(false);
       }
@@ -253,6 +271,18 @@ const SignUp = () => {
               <StepIndicator />
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {errors.api && (
+                  <div
+                    className={`p-4 text-center text-sm rounded-xl border ${
+                      isThemeDark
+                        ? "bg-red-900/20 border-red-700/50 text-red-300"
+                        : "bg-red-100 border-red-200 text-red-700"
+                    }`}
+                    role="alert"
+                  >
+                    {errors.api}
+                  </div>
+                )}
                 {/* Step 1: Personal Information */}
                 {currentStep === 1 && (
                   <div className="space-y-6">

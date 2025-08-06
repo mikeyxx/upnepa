@@ -335,17 +335,6 @@ const Recharge = () => {
                         <span
                           className={`${isThemeDark ? "text-gray-300" : "text-gray-700"}`}
                         >
-                          VAT (6.98%)
-                        </span>
-                        <span className="font-semibold text-red-500">
-                          -₦{breakdown.vat.toLocaleString()}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={`${isThemeDark ? "text-gray-300" : "text-gray-700"}`}
-                        >
                           Remita Fee
                         </span>
                         <span className="font-semibold text-red-500">
@@ -390,6 +379,17 @@ const Recharge = () => {
                           className={`font-bold ${isThemeDark ? "text-white" : "text-gray-900"}`}
                         >
                           {breakdown.unitsToReceive.toFixed(2)} kWh
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`${isThemeDark ? "text-gray-300" : "text-gray-700"}`}
+                        >
+                          VAT
+                        </span>
+                        <span className="font-semibold">
+                          {/*-₦{breakdown.vat.toLocaleString()}*/}
+                          6.98%
                         </span>
                       </div>
 
